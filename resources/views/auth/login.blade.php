@@ -1,48 +1,97 @@
-<x-guest-layout>
-    <x-authentication-card>
-        <x-slot name="logo">
-            <x-authentication-card-logo />
-        </x-slot>
+@extends('layouts.guest')
 
-        <x-validation-errors class="mb-4" />
+@section('title', 'Login')
 
-        @if (session('status'))
-            <div class="mb-4 font-medium text-sm text-green-600">
-                {{ session('status') }}
+@section('content')
+    <div class="login-box">
+
+        <div class="card card-outline card-primary">
+            <div class="card-header text-center">
+                <a href="{{ url('/') }}" class="h1"><b>Admin</b>LTE</a>
             </div>
-        @endif
+            <div class="card-body">
+                <p class="login-box-msg">Selamat datang di aplikasi pembayaran spp</p>
+                <form id="loginForm" action="{{ route('login') }}" method="post">
+                    @csrf
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Email address</label>
+                        <input type="text" name="email" class="form-control username" id="exampleInputEmail1"
+                            placeholder="Enter email" aria-describedby="exampleInputEmail1-error" aria-invalid="true">
 
-        <form method="POST" action="{{ route('login') }}">
-            @csrf
-
-            <div>
-                <x-label for="email" value="{{ __('Email') }}" />
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Password</label>
+                        <input type="password" name="password" class="form-control password" id="exampleInputPassword1"
+                            placeholder="Password" aria-describedby="exampleInputPassword1-error">
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-8">
+                            <div class="icheck-primary">
+                                <input type="checkbox" id="showPassword">
+                                <label for="showPassword" class="text-muted" style="font-size: 15px">
+                                    Show Password
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="button" onclick="login()" class="btn btn-primary btn-block" id="loginButton">
+                                <span id="buttonText">Login</span>
+                                <span id="loadingSpinner" style="display:none;"><i
+                                        class="fas fa-spinner fa-spin"></i></span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
+        </div>
+    </div>
+@endsection
 
-            <div class="mt-4">
-                <x-label for="password" value="{{ __('Password') }}" />
-                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
-            </div>
+@push('scripts')
+    <script>
+        // Show password
+        $('#showPassword').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('.password').attr('type', 'text');
+            } else {
+                $('.password').attr('type', 'password');
+            }
+        })
 
-            <div class="block mt-4">
-                <label for="remember_me" class="flex items-center">
-                    <x-checkbox id="remember_me" name="remember" />
-                    <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-                </label>
-            </div>
+        // Fungsi untuk login
+        function login() {
+            let username = $('.username').val();
+            let password = $('.password').val();
 
-            <div class="flex items-center justify-end mt-4">
-                @if (Route::has('password.request'))
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                        {{ __('Forgot your password?') }}
-                    </a>
-                @endif
+            if (!username) return alert('Username wajib diisi');
+            if (!password) return alert('Password wajib diisi');
 
-                <x-button class="ms-4">
-                    {{ __('Log in') }}
-                </x-button>
-            </div>
-        </form>
-    </x-authentication-card>
-</x-guest-layout>
+            // Disable the button to prevent multiple clicks during the Ajax request
+            $('#loginButton').attr('disabled', true);
+            $('#buttonText').hide();
+            $('#loadingSpinner').show();
+
+            $.ajax({
+                type: 'POST',
+                url: '{{ route('login') }}',
+                data: $('#loginForm').serialize(),
+                success: function(response) {
+                    // You can redirect or perform any other action here
+                    toastr.success(response.message);
+                },
+                error: function(error) {
+                    // Handle the error response
+                    toastr.error(error.responseJSON.message);
+                },
+                complete: function() {
+                    // Re-enable the button and hide the loading indicator
+                    $('#loginButton').attr('disabled', false);
+                    $('#buttonText').show();
+                    $('#loadingSpinner').hide();
+                }
+            });
+        }
+    </script>
+@endpush
