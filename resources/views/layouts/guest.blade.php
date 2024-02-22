@@ -31,6 +31,17 @@
     <script src="{{ asset('AdminLTE') }}/dist/js/adminlte.min.js?v=3.2.0"></script>
     <script src="{{ asset('js/custom.js') }}"></script>
     @stack('scripts')
+
+    <script>
+        // Show password
+        $('#showPassword').on('click', function() {
+            if ($(this).is(':checked')) {
+                $('.password').attr('type', 'text');
+            } else {
+                $('.password').attr('type', 'password');
+            }
+        })
+    </script>
 </body>
 
 </html>

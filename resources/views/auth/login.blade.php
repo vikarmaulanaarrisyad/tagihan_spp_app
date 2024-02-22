@@ -4,7 +4,6 @@
 
 @section('content')
     <div class="login-box">
-
         <div class="card card-outline card-primary">
             <div class="card-header text-center">
                 <a href="{{ url('/') }}" class="h1"><b>Admin</b>LTE</a>
@@ -14,15 +13,26 @@
                 <form id="loginForm" action="{{ route('login') }}" method="post">
                     @csrf
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Email address</label>
-                        <input type="text" name="email" class="form-control username" id="exampleInputEmail1"
-                            placeholder="Enter email" aria-describedby="exampleInputEmail1-error" aria-invalid="true">
-
+                        <label for="auth">Username</label>
+                        <input type="text" name="auth"
+                            class="form-control username @error('auth') is-invalid @enderror" id="auth"
+                            placeholder="Username" autocomplete="off">
+                        @error('auth')
+                            <span class="invalid-feedback">
+                                {{ $message }}
+                            </span>
+                        @enderror
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputPassword1">Password</label>
-                        <input type="password" name="password" class="form-control password" id="exampleInputPassword1"
-                            placeholder="Password" aria-describedby="exampleInputPassword1-error">
+                        <label for="password">Password</label>
+                        <input type="password" name="password"
+                            class="form-control password @error('password') is-invalid @enderror" id="password"
+                            placeholder="Password" aria-describedby="password-error">
+                        @error('password')
+                            <span class="invalid-feedback">
+                                {{ $message }}
+                            </span>
+                        @enderror
                     </div>
                     <div class="row mb-3">
                         <div class="col-8">
@@ -51,22 +61,13 @@
 
 @push('scripts')
     <script>
-        // Show password
-        $('#showPassword').on('click', function() {
-            if ($(this).is(':checked')) {
-                $('.password').attr('type', 'text');
-            } else {
-                $('.password').attr('type', 'password');
-            }
-        })
-
         // Fungsi untuk login
         function login() {
             let username = $('.username').val();
             let password = $('.password').val();
 
-            if (!username) return alert('Username wajib diisi');
-            if (!password) return alert('Password wajib diisi');
+            if (!username) return toastr.info('Username wajib diisi');
+            if (!password) return toastr.info('Password wajib diisi');
 
             // Disable the button to prevent multiple clicks during the Ajax request
             $('#loginButton').attr('disabled', true);
@@ -79,11 +80,14 @@
                 data: $('#loginForm').serialize(),
                 success: function(response) {
                     // You can redirect or perform any other action here
-                    toastr.success(response.message);
+                    toastr.success('Selamat anda berhasil login ke dalam sistem kami');
+                    window.location.href = '{{ route('dashboard') }}';
+                    $('#loginButton').attr('disabled', false);
                 },
-                error: function(error) {
+                error: function(errors) {
                     // Handle the error response
-                    toastr.error(error.responseJSON.message);
+                    loopErrors(errors.responseJSON.errors);
+                    toastr.error(errors.responseJSON.message);
                 },
                 complete: function() {
                     // Re-enable the button and hide the loading indicator
