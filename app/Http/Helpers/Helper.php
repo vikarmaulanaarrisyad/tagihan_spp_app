@@ -9,7 +9,7 @@ if (!function_exists('upload')) {
         $extensi  = $file->getClientOriginalExtension();
         $filename = "{$filename}_" . date('Ymdhis') . ".{$extensi}";
 
-        Storage::disk('public')->put("/$directory", $file, $filename);
+        Storage::disk('public')->putFileAs("/$directory", $file, $filename);
 
         return "$directory/$filename";
     }

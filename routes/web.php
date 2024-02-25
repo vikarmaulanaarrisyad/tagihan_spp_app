@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,5 +29,14 @@ Route::group([
         Route::get('/users/data', [UserController::class, 'data'])->name('users.data');
         Route::get('ajax/users/roles/search', [UserController::class, 'searchRole'])->name('users.roles.search');
         Route::resource('/users', UserController::class);
+    });
+
+    Route::group([
+        'middleware' => ['role:admin'],
+    ], function () {
+        //
+        Route::get('/setting', [SettingController::class, 'index'])->name('setting.index');
+        Route::put('/setting/{setting}', [SettingController::class, 'update'])
+            ->name('setting.update');
     });
 });

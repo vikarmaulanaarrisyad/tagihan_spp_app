@@ -17,7 +17,7 @@
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
 
-    
+
     <!-- iCheck -->
     <link rel="stylesheet" href="{{ asset('/AdminLTE/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     <!-- JQVMap -->
@@ -144,6 +144,8 @@
     <script src="{{ asset('js/custom.js') }}"></script>
 
     @stack('scripts')
+
+
 </body>
 
 </html>
