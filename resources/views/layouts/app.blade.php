@@ -1,45 +1,149 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<html lang="en">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ config('app.name') }} - @yield('title')</title>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    {{--  <link rel="icon" href="{{ url($setting->path_image ?? '') }}" type="image/*">  --}}
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="{{ asset('/AdminLTE/plugins/fontawesome-free/css/all.min.css') }}">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
 
-        <!-- Styles -->
-        @livewireStyles
-    </head>
-    <body class="font-sans antialiased">
-        <x-banner />
+    
+    <!-- iCheck -->
+    <link rel="stylesheet" href="{{ asset('/AdminLTE/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
+    <!-- JQVMap -->
+    <link rel="stylesheet" href="{{ asset('/AdminLTE/plugins/jqvmap/jqvmap.min.css') }}">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="{{ asset('/AdminLTE/plugins/overlayScrollbars/css/OverlayScrollbars.min.css') }}">
 
-        <div class="min-h-screen bg-gray-100">
-            @livewire('navigation-menu')
+    <link rel="stylesheet" href="{{ asset('AdminLTE') }}/plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css">
+    @stack('css_vendor')
 
-            <!-- Page Heading -->
-            @if (isset($header))
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
+    <!-- Theme style -->
+    <link rel="stylesheet" href="{{ asset('/AdminLTE/dist/css/adminlte.min.css') }}">
+
+    <style>
+        .note-editor {
+            margin-bottom: 0;
+        }
+
+        .note-editor.is-invalid {
+            border-color: var(--danger);
+        }
+
+        .nav-sidebar .nav-header {
+            font-size: .6rem;
+            font-weight: bold;
+            color: #888;
+        }
+
+        /*
+        a {
+            color: #ff0000;
+            text-decoration: none;
+            background-color: transparent;
+        }
+
+        a:hover {
+            color: #b51616;
+            text-decoration: none;
+            background-color: transparent;
+        }
+        */
+    </style>
+
+    @stack('css')
+</head>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+
+        {{--  <div class="preloader flex-column justify-content-center align-items-center">
+            <img class="animation__shake" src="{{ asset('AdminLTE') }}/dist/img/AdminLTELogo.png" alt="AdminLTELogo"
+                height="60" width="60">
+        </div>  --}}
+
+        @include('layouts.partials.header')
+        @include('layouts.partials.sidebar')
+
+        <div class="content-wrapper">
+
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">@yield('title')</h1>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                @section('breadcrumb')
+                                    <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
+                                @show
+                            </ol>
+                        </div>
                     </div>
-                </header>
-            @endif
+                </div>
+            </div>
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+            <section class="content">
+                <div class="container-fluid">
+
+                    @yield('content')
+
+                </div>
+            </section>
+
         </div>
 
-        @stack('modals')
+        @include('layouts.partials.footer')
 
-        @livewireScripts
-    </body>
+        </aside>
+
+    </div>
+
+    <!-- jQuery -->
+    <script src="{{ asset('/AdminLTE/plugins/jquery/jquery.min.js') }}"></script>
+    <!-- jQuery UI 1.11.4 -->
+    <script src="{{ asset('/AdminLTE/plugins/jquery-ui/jquery-ui.min.js') }}"></script>
+    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+    <script>
+        $.widget.bridge('uibutton', $.ui.button)
+    </script>
+    <!-- Bootstrap 4 -->
+    <script src="{{ asset('/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <!-- ChartJS -->
+    <script src="{{ asset('/AdminLTE/plugins/chart.js/Chart.min.js') }}"></script>
+    <!-- Sparkline -->
+    <script src="{{ asset('/AdminLTE/plugins/sparklines/sparkline.js') }}"></script>
+    <!-- JQVMap -->
+    <script src="{{ asset('/AdminLTE/plugins/jqvmap/jquery.vmap.min.js') }}"></script>
+    <script src="{{ asset('/AdminLTE/plugins/jqvmap/maps/jquery.vmap.usa.js') }}"></script>
+    <!-- jQuery Knob Chart -->
+    <script src="{{ asset('/AdminLTE/plugins/jquery-knob/jquery.knob.min.js') }}"></script>
+    <!-- daterangepicker -->
+    <script src="{{ asset('/AdminLTE/plugins/moment/moment.min.js') }}"></script>
+
+    <!-- overlayScrollbars -->
+    <script src="{{ asset('/AdminLTE/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
+    <script src="{{ asset('AdminLTE') }}/plugins/sweetalert2/sweetalert2.min.js"></script>
+
+    @stack('scripts_vendor')
+
+
+    <!-- AdminLTE App -->
+    <script src="{{ asset('/AdminLTE/dist/js/adminlte.js') }}"></script>
+    <script src="{{ asset('js/custom.js') }}"></script>
+
+    @stack('scripts')
+</body>
+
 </html>

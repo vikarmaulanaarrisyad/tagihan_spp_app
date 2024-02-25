@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,15 +16,17 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+Route::group([
+    'middleware' => ['auth', 'role:admin,operator,wali'],
+], function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::group(['middleware' => ['role:admin,operator']], function () {
+        Route::get('/users/data', [UserController::class, 'data'])->name('users.data');
+        Route::get('ajax/users/roles/search', [UserController::class, 'searchRole'])->name('users.roles.search');
+        Route::resource('/users', UserController::class);
+    });
 });

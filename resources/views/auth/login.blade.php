@@ -36,11 +36,9 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-8">
-                            <div class="icheck-primary">
-                                <input type="checkbox" id="showPassword">
-                                <label for="showPassword" class="text-muted" style="font-size: 15px">
-                                    Show Password
-                                </label>
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" type="checkbox" id="showPassword">
+                                <label for="showPassword" class="custom-control-label">Show Password</label>
                             </div>
                         </div>
                     </div>
@@ -61,18 +59,36 @@
 
 @push('scripts')
     <script>
+        // Menangani keypress event
+        $(document).on('keypress', function(e) {
+            if (e.which == 13) {
+                login();
+            }
+        });
+
         // Fungsi untuk login
         function login() {
             let username = $('.username').val();
             let password = $('.password').val();
 
-            if (!username) return toastr.info('Username wajib diisi');
-            if (!password) return toastr.info('Password wajib diisi');
+            if (!username) {
+                toastr.info('Username wajib diisi');
+                return;
+            }
+
+            if (!password) {
+                toastr.info('Password wajib diisi');
+                return;
+            }
 
             // Disable the button to prevent multiple clicks during the Ajax request
-            $('#loginButton').attr('disabled', true);
-            $('#buttonText').hide();
-            $('#loadingSpinner').show();
+            const loginButton = $('#loginButton');
+            const buttonText = $('#buttonText');
+            const loadingSpinner = $('#loadingSpinner');
+
+            loginButton.attr('disabled', true);
+            buttonText.hide();
+            loadingSpinner.show();
 
             $.ajax({
                 type: 'POST',
@@ -81,8 +97,11 @@
                 success: function(response) {
                     // You can redirect or perform any other action here
                     toastr.success('Selamat anda berhasil login ke dalam sistem kami');
-                    window.location.href = '{{ route('dashboard') }}';
-                    $('#loginButton').attr('disabled', false);
+
+                    // Menunggu 3 detik sebelum mengarahkan ke dashboard
+                    setTimeout(function() {
+                        window.location.href = '{{ route('dashboard') }}';
+                    }, 3000);
                 },
                 error: function(errors) {
                     // Handle the error response
@@ -91,9 +110,9 @@
                 },
                 complete: function() {
                     // Re-enable the button and hide the loading indicator
-                    $('#loginButton').attr('disabled', false);
-                    $('#buttonText').show();
-                    $('#loadingSpinner').hide();
+                    loginButton.attr('disabled', false);
+                    buttonText.show();
+                    loadingSpinner.hide();
                 }
             });
         }
