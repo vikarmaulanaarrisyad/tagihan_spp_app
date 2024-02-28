@@ -27,7 +27,7 @@ class UserController extends Controller
     public function data()
     {
         $userLogin = auth()->user();
-        $users = User::with('role')->get();
+        $users = User::admin()->with('role')->get();
 
         return datatables($users)
             ->addIndexColumn()

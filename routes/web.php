@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WaliController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -38,5 +39,9 @@ Route::group([
         Route::get('/setting', [SettingController::class, 'index'])->name('setting.index');
         Route::put('/setting/{setting}', [SettingController::class, 'update'])
             ->name('setting.update');
+
+        // Route Wali
+        Route::get('/wali/data', [WaliController::class, 'data'])->name('wali.data');
+        Route::resource('wali', WaliController::class);
     });
 });

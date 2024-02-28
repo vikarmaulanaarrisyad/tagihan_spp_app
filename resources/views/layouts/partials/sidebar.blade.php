@@ -31,6 +31,15 @@
                         </p>
                     </a>
                 </li>
+                <li class="nav-header">MASTER</li>
+                <li class="nav-item">
+                    <a href="{{ route('wali.index') }}" class="nav-link {{ request()->is('wali*') ? 'active' : '' }}">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>
+                            Data Wali Murid
+                        </p>
+                    </a>
+                </li>
                 <li class="nav-header">SYSTEM</li>
                 <li class="nav-item">
                     <a href="{{ route('users.index') }}" class="nav-link {{ request()->is('users*') ? 'active' : '' }}">

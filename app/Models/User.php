@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -69,5 +71,18 @@ class User extends Authenticatable
     public function hasRole($role)
     {
         return $this->role->name == $role;
+    }
+
+    /**
+     * Scope a query to only include wali users.
+     */
+    public function scopeWali(Builder $query): void
+    {
+        $query->where('role_id',  3);
+    }
+
+    public function scopeAdmin(Builder $query): void
+    {
+        $query->whereNot('role_id',  3);
     }
 }
